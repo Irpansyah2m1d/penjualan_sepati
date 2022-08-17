@@ -8,37 +8,26 @@ if(isset($_POST["btn-login"])){
 
   $username = $_POST["username"];
   $password = $_POST["password"];
-  @$data_user = getData("SELECT * FROM tbl_login WHERE username = '$username'")[0];
+  @$data_user = getData("SELECT * FROM tbl_user WHERE username = '$username'")[0];
   if(@$data_user){
-    if(@$data_user["is_active"] == "1"){
       if(password_verify($password, $data_user["password"])){
-        $_SESSION["npm"] = $data_user["npm"];
         $_SESSION["username"] = $data_user["username"];
         $_SESSION["level"] = $data_user["level"];
-         $_SESSION["login"]= $username;
-        if($data_user["level"] === '1'){
+        $_SESSION["login"]= $username;
+        if($data_user["level"] == '2'){
          echo '<script>window.location="Admin/profil.php";</script>';
-        }else if($data_user["level"] === '2'){
+        }else{
          echo '<script>window.location="Admin/dashboard.php";</script>';
-  
-        }else {
-          echo '<script>window.location="data_mahasiswa_web.php";</script>';
         }
       }else {
         setFlashSistem("Salah", "danger", "Password Anda"); 
         //  echo '<script>window.location="login.php";</script>';
       }
     }else{
-      // echo "<script>
-      //         alert('Akun Anda Tidak Aktif!!!');
-      //         </script>"; 
-      setFlashSistem("Tidak Aktif", "danger", "Akun Anda");
-      // echo '<script>window.location="login.php";</script>';
+      setFlashSistem("Tidak Valid / Belum Terdaftar", "danger", "Username Anda"); 
     }
-  }else {
-    setFlashSistem("Tidak Valid / Belum Terdaftar", "danger", "Username Anda"); 
   }
-}
+
 
 if(isset($_SESSION["berhasil"])){
      setFlashSistem("Silahkan Login!", "success", "Berhasil Mendaftar");
@@ -49,7 +38,7 @@ if(isset($_SESSION["berhasil"])){
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="index2.html" class="h1"><b>E-DUKM</b>POLSRI</a>
+      <a href="index2.html" class="h1"><b>E-Shoes</b></a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Silahkan Login</p>
