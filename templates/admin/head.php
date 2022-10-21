@@ -3,55 +3,40 @@ if(!session_id())session_start();
 include '../koneksi.php';
 $url = $_SERVER['REQUEST_URI'];
 
-$url = explode("/data_ukm/",$url)[1];
+$url = explode("Junior_Web_Developer/Penjualan_sepatu/",$url)[1];
 
 $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
 $request_uri = $uri_parts[0];
 switch ($request_uri) {
   
-  case '/data_ukm/Admin/data_mahasiswa.php':
-    $title="Data Mahasiswa | E-DUKM POLSRI";
-    $bread = "Data Mahasiswa";
-    $link = "data_mahasiswa.php";
+  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_barang.php':
+    $title="Data Barang | E-Shoes";
+    $bread = "Data Barang";
+    $link = "data_barang.php";
     break;
-  case '/data_ukm/Admin/data_user.php':
-    $title="Data User | E-DUKM POLSRI";
+  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_pemesanan.php':
+    $title="Data Pemesanan | E-Shoes";
+    $bread = "Data Pemesanan";
+    $link = "data_pemesanan.php";
+    break;
+  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_user.php':
+    $title="Data User | E-Shoes";
      $bread = "Data User";
     $link = "data_user.php";
     break;
-  case '/data_ukm/Admin/change_password.php':
-    $title="Change Password | E-DUKM POLSRI";
+  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/change_password.php':
+    $title="Change Password | E-Shoes";
      $bread = "Change Password";
     $link = "change_password.php";
     break;
-  case '/data_ukm/Admin/profil.php':
-    $title="Profil | E-DUKM POLSRI";
-     $bread = "Profil";
-    $link = "profil.php";
-    break;
-  case '/data_ukm/Admin/data_prestasi.php':
-    $title="Data Prestasi | E-DUKM POLSRI";
-     $bread = "Data Prestasi";
-    $link = "data_prestasi.php";
-    break;
-  case '/data_ukm/Admin/data_dosen.php':
-    $title="Data Dosen | E-DUKM POLSRI";
-     $bread = "Data Dosen";
-    $link = "data_dosen.php";
-    break;
-  case '/data_ukm/Admin/data_ukm.php':
-    $title="Data UKM | E-DUKM POLSRI";
-     $bread = "Data UKM";
-    $link = "data_ukm.php";
-    break;
   default:
-  $title="Dashboard | E-DUKM POLSRI";
+  $title="Dashboard | E-Shoes";
    $bread = "Dashboard";
     $link = "dashboard.php";
  
 }
-$npm = $_SESSION["npm"];
-$data_mahasiswa = getData("SELECT * FROM data_mahasiswa WHERE npm = '$npm'");
+// $npm = $_SESSION["npm"];
+// $data_mahasiswa = getData("SELECT * FROM data_mahasiswa WHERE npm = '$npm'");
 // var_dump($data_mahasiswa);
 // die();
 ?>
@@ -95,13 +80,13 @@ $data_mahasiswa = getData("SELECT * FROM data_mahasiswa WHERE npm = '$npm'");
 
   <!-- Preloader -->
    <!-- Penampil flash -->
-      <?php if(isset($_SESSION["login"])) : ?>
+      <!-- <?php if(isset($_SESSION["login"])) : ?>
         <div id="session" data-login="<?= $_SESSION["login"]; ?>"></div>
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="../img/Logo Polsri.png" alt="AdminLTELogo" height="60" width="60">
         </div>
         <?php unset($_SESSION["login"]); ?>
-    <?php endif; ?>
+    <?php endif; ?> -->
     
 
 

@@ -1,11 +1,10 @@
 <?php 
-include '../template/admin/head.php' ?>
-<?php include '../template/admin/sidebar.php' ?>
+include '../templates/admin/head.php' ?>
+<?php include '../templates/admin/sidebar.php' ?>
 <?php
-$data_mahasiswa = count(getData("SELECT * FROM data_mahasiswa"));
-$data_dosen = count(getData("SELECT * FROM data_dosen"));
-$dsn_terdatar = count(getData("SELECT * FROM tbl_login WHERE level = '3'"));
-$mhs_terdaftar = count(getData("SELECT * FROM tbl_login WHERE level = '1'"));
+$tbl_barang = count(getData("SELECT * FROM tbl_barang"));
+$tbl_pesanan = count(getData("SELECT * FROM tbl_pemesanan"));
+$tbl_user = count(getData("SELECT * FROM tbl_user WHERE level = '2'"));
 ?>
 
 
@@ -18,9 +17,9 @@ $mhs_terdaftar = count(getData("SELECT * FROM tbl_login WHERE level = '1'"));
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3><?= $data_mahasiswa; ?></h3>
+                <h3><?= $tbl_barang; ?></h3>
 
-                <p>Data Mahasiswa</p>
+                <p>Data Barang</p>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-database"></i>
@@ -33,9 +32,9 @@ $mhs_terdaftar = count(getData("SELECT * FROM tbl_login WHERE level = '1'"));
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3><?= $dsn_terdatar; ?> Dari <?= $data_dosen; ?></h3>
+                <h3><?= $tbl_pesanan; ?></h3>
 
-                <p>Dosen Terdaftar</p>
+                <p>Data Pesanan</p>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-chalkboard-user"></i>
@@ -48,9 +47,9 @@ $mhs_terdaftar = count(getData("SELECT * FROM tbl_login WHERE level = '1'"));
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?= $mhs_terdaftar; ?></h3>
+                <h3><?= $tbl_user; ?></h3>
 
-                <p> Mahasiswa Terfaftar</p>
+                <p> Data User</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -81,4 +80,4 @@ $mhs_terdaftar = count(getData("SELECT * FROM tbl_login WHERE level = '1'"));
     </section>
     <!-- /.content -->
   </div>
-<?php include '../template/admin/footer.php' ?>
+<?php include '../templates/admin/footer.php' ?>

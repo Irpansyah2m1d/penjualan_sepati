@@ -1,16 +1,16 @@
 <?php
 $url = $_SERVER['REQUEST_URI'];
 
-$url = explode("/junior_web_developer/Penjualan_sepatu/",$url)[1];
+$url = explode("Junior_Web_Developer/Penjualan_sepatu/",$url)[1];
 
 $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
 $request_uri = $uri_parts[0];
 switch ($request_uri) {
   
-  case '/junior_web_developer/Penjualan_sepatu/login.php':
+  case 'Junior_Web_Developer/Penjualan_sepatu/login.php':
     $title="Login | E-Shoes";
     break;
-  case '/junior_web_developer/Penjualan_sepatu/register.php':
+  case 'Junior_Web_Developer/Penjualan_sepatu/register.php':
     $title="Register | E-Shoes";
     break;
  

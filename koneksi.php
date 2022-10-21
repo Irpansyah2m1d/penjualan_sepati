@@ -1,4 +1,5 @@
 <?php 
+date_default_timezone_set("Asia/Jakarta");
 if(!session_id()) session_start();
 $server = "localhost";
 $host = "root";
@@ -66,57 +67,40 @@ function uploadGambar($path){
 
 function registerasi($data){
 		global $conn;
+		$nama = $data['nama'];
+		$email = $data['email'];
 		$username = $data['username'];
         $password1 = $data['password1'];
         $password2 = $data['password2'];
-        $npm = $data["npm"];
-        $level = $data["jenis"];
-        if($level == "1"){
-            $data_cek = getData("SELECT * FROM data_mahasiswa WHERE npm = '$npm'");
+            $data_cek = getData("SELECT * FROM tbl_user WHERE username = '$username'");
             // var_dump($data_cek);
             // die();
-            if(empty($data_cek)){
-                setFlashSistem("Di UKM / Ormawa!", "danger", "Anda Belum Terdaftar");
+            if($data_cek){
+                setFlashSistem("Silahkan Coba Lagi!!", "danger", "Username Sudah Ada");
                 return;
-            }else{
-                @$data = getData("SELECT max(id_user) FROM tbl_login WHERE `level` = '1'")[0];
+            }else {
+                 @$data = getData("SELECT max(id_user) FROM tbl_user WHERE `level` = '2'")[0];
                 
                 if($data){
                     $kode = substr($data["max(id_user)"], 3);
-                    $kode = $kode + 1;
+                    $kode = intval($kode) + 1;
                     
                     $id_user = "US".str_pad($kode, 4, "0", STR_PAD_LEFT);
                 }else {
                     $id_user = "US0001";
                 }
+                if($password1 !== $password2){
+                        setFlashSistem("Tidak Sesuai! Silahkan Coba Lagi", "danger", "Konfirmasi Password");
+                        return;
+                    }else{
+                        // var_dump($id_user);
+                        // die();
+                        $level = "2";
+                        $password = password_hash($password1, PASSWORD_DEFAULT);
+                        mysqli_query($conn, "INSERT INTO `tbl_user` VALUES('$id_user', '$nama', '$email', '-', '$username', '$password', '$level')");
+                        return mysqli_affected_rows($conn);
+                    }
             }
-        }else{
-            $data_dosen = getData("SELECT * FROM data_dosen WHERE nidn = '$npm'");
-            // var_dump($data_dosen);
-            // die();
-            if(empty($data_dosen)){
-                setFlashSistem("Bapak / Ibu Belum Terdaftar Di Aplikasi", "danger", "Mohon Maaf");
-                return;
-            }else{
-                $id_user = $data_dosen[0]["id_dosen"];
-                }
-            }
-        @$cekUsername = getData("SELECT npm FROM `tbl_login` WHERE npm = '$npm'");
-        if(@$cekUsername){
-                setFlashSistem("Sudah Terdaftar", "danger", "Akun Anda");
-                return; 
-        }else{
-            if($password1 !== $password2){
-                setFlashSistem("Tidak Sesuai! Silahkan Coba Lagi", "danger", "Konfirmasi Password");
-                return;
-            }else{
-                // var_dump($id_user);
-                // die();
-                $password = password_hash($password1, PASSWORD_DEFAULT);
-                mysqli_query($conn, "INSERT INTO `tbl_login` VALUES('$id_user', '$npm', '$username', '$password', '$level', 1)");
-                return mysqli_affected_rows($conn);
-            }
-        }
 	}
 
     function changePassword($data){
@@ -148,164 +132,124 @@ function registerasi($data){
                     
             }
     }
-
-    // Tambah UKM
-    function tambahUKM($data){
-        // var_dump($data);
-        // die();
+    // Tambah Barang
+    function tambahBarang($data){
         global $conn;
-        $nama_ukm = $data["nama_ukm"];
-        $deskripsi_ukm = $data["deskripsi_ukm"];
-        $website_ukm = $data["website_ukm"];
-        $foto_ukm = uploadGambar("../img/foto_ukm/");
-        if(!$foto_ukm){
+        @$data_barang = getData("SELECT max(id_barang) FROM tbl_barang")[0];
+                
+                if($data_barang){
+                    $kode = substr($data_barang["max(id_barang)"], 3);
+                    $kode = intval($kode) + 1;
+                    
+                    $id_barang = "SPT".str_pad($kode, 4, "0", STR_PAD_LEFT);
+                }else {
+                    $id_barang = "SPT0001";
+                }
+        $nama_barang = $data["nama_barang"];
+        $deskripsi_barang = $data["deskripsi_barang"];
+        $warna_barang = $data["warna_barang"];
+        $harga_barang = $data["harga_barang"];
+        $jumlah_barang = $data["jumlah_barang"];
+        $gambar_barang = uploadGambar("../img/produk/");
+        if(!$gambar_barang){
             return false;
         }
 
-        mysqli_query($conn, "INSERT INTO data_ukm VALUES('', '$nama_ukm', '$deskripsi_ukm', '$website_ukm', '$foto_ukm')");
+        mysqli_query($conn, "INSERT INTO tbl_barang VALUES('$id_barang', '$nama_barang', '$deskripsi_barang', '$warna_barang','$harga_barang', '$gambar_barang', '$jumlah_barang')");
         return mysqli_affected_rows($conn);
     }
-    // Edit UKM
-    function editUKM($data){
-        // var_dump($data);
-        // die();
+    // Edit Barang
+    function editBarang($data){
         global $conn;
-        $id_ukm = $data["id_ukm"];
-        $nama_ukm = $data["nama_ukm"];
-        $deskripsi_ukm = $data["deskripsi_ukm"];
-        $website_ukm = $data["website_ukm"];
+        $id_barang = $data["id_barang"];
+        $nama_barang = $data["nama_barang"];
+        $deskripsi_barang = $data["deskripsi_barang"];
+        $warna_barang = $data["warna_barang"];
+        $harga_barang = $data["harga_barang"];
+        $jumlah_barang = $data["jumlah_barang"];
         $gambarLama = $data["gambarLama"];
         if($_FILES["gambar"]["error"] === 4){
-            $foto_ukm = $gambarLama;
+            $gambar_barang = $gambarLama;
         }else {
-            $foto_ukm = uploadGambar("../img/foto_ukm/");
-            if(!$foto_ukm){
-                return false;
+            if(file_exists("img/produk/$gambarLama")){
+                unlink("img/produk/$gambarLama");
             }
-            if(file_exists("../img/foto_ukm/$gambarLama")){
-                unlink("../img/foto_ukm/$gambarLama");
-            }  
-        }
-
-        mysqli_query($conn, "UPDATE data_ukm SET nama_ukm = '$nama_ukm', deskripsi_ukm = '$deskripsi_ukm', website_ukm = '$website_ukm', foto_ukm = '$foto_ukm' WHERE id_ukm = '$id_ukm'");
-        return mysqli_affected_rows($conn);
-    }
-    // Tambah Prestasi
-    function tambahPrestasi($data){
-        global $conn;
-        $nama_prestasi = $data["nama_prestasi"];
-        $tingkat_prestasi = $data["tingkat_prestasi"];
-        $jenis_prestasi = $data["jenis_prestasi"];
-        $bukti_prestasi = uploadGambar("../img/bukti_prestasi/");
-        if(!$bukti_prestasi){
-            return false;
-        }
-        $npm = $_SESSION["npm"];
-
-        mysqli_query($conn, "INSERT INTO data_mahasiswa_prestasi VALUES('', '$npm', '$nama_prestasi', '$tingkat_prestasi', '$jenis_prestasi', '$bukti_prestasi')");
-        return mysqli_affected_rows($conn);
-    }
-    // Edit Prestasi
-    function editPrestasi($data){
-        global $conn;
-        $nama_prestasi = $data["nama_prestasi"];
-        $tingkat_prestasi = $data["tingkat_prestasi"];
-        $jenis_prestasi = $data["jenis_prestasi"];
-        $bukti_lama = $data["gambar_lama"];
-        $id = $data["id_prestasi"];
-        if($_FILES["gambar"]["error"] === 4){
-            $bukti_prestasi = $bukti_lama;
-        }else {
-            $bukti_prestasi = uploadGambar("../img/bukti_prestasi/");
-            if(!$bukti_prestasi){
-                return false;
-            }
-            if(file_exists("../img/bukti_prestasi/$bukti_lama")){
-                unlink("../img/bukti_prestasi/$bukti_lama");
-            }  
-        }
-        $npm = $_SESSION["npm"];
-
-        mysqli_query($conn, "UPDATE data_mahasiswa_prestasi SET npm = '$npm', nama_prestasi = '$nama_prestasi', tingkat = '$tingkat_prestasi', jenis = '$jenis_prestasi', dokumentasi = '$bukti_prestasi' WHERE id = '$id'");
-        return mysqli_affected_rows($conn);
-    }
-
-    function simpanProfile($data){
-        global $conn;
-        $npm = $data["npm"];
-        $nama = $data["nama"];
-        $asal_daerah = $data["asal_daerah"];
-        $prodi = $data["prodi"];
-        $kelas = $data["kelas"];
-        $semester = $data["semester"];
-        $akt = $data["akt"];
-        $alamat = $data["alamat"];
-        $hp = $data["hp"];
-        $email = $data["email"];
-        $gambarLama = $data["gambar_lama"];
-        // $id_ukm = $data["id"];
-
-        $ukm_mahasiswa = $data["ukm_mahasiswa"];
-        $cek_ukm = getData("SELECT * FROM data_mahasiswa_ukm WHERE npm = '$npm'");
-        // var_dump($cek_ukm);
-        // die();
-        if(empty($cek_ukm)){
-            foreach($ukm_mahasiswa as $ukm){
-                mysqli_query($conn, "INSERT INTO data_mahasiswa_ukm VALUES('', '$npm', '$ukm')");
-            }
-        }else{
-            mysqli_query($conn, "DELETE FROM data_mahasiswa_ukm WHERE npm = '$npm'");
-            foreach($ukm_mahasiswa as $ukm){
-                mysqli_query($conn, "INSERT INTO data_mahasiswa_ukm VALUES('', '$npm', '$ukm')");
-            }
-            // $no = 0;
-            // foreach($ukm_mahasiswa as $ukm){
-            //     $id = $id_ukm[$no];
-            //         mysqli_query($conn, "UPDATE data_mahasiswa_ukm SET npm = '$npm', nama_ukm = '$ukm' WHERE id = '$id'");
-            //     $no++;
-            // }
+            $gambar_barang = uploadGambar("../img/produk/");
         }
         
-        if($_FILES["gambar"]["error"] == 4){
-            $gambar = $gambarLama;
-        }else {
-            if($gambarLama != "user.jpg"){
-                if(file_exists("../img/profil/$gambarLama")){
-                    unlink("../img/profil/$gambarLama");
-                }
-            }
-            $gambar = uploadGambar("../img/profil/");
-        }
+        // if(!$gambar_barang){
+        //     return false;
+        // }
 
-        $cek = mysqli_query($conn, "UPDATE data_mahasiswa SET nama = '$nama', email = '$email', 
-        hp = '$hp', prodi = '$prodi', kelas = '$kelas', semester = '$semester', akt = '$akt', asal_daerah = '$asal_daerah', alamat = '$alamat', foto = '$gambar' WHERE npm = '$npm'");
-        if($cek){
-            return 1;
-        }else{
-            return 0;
-        }
+        mysqli_query($conn, "UPDATE tbl_barang SET nama = '$nama_barang', deskripsi = '$deskripsi_barang', warna = '$warna_barang', harga = '$harga_barang', gambar = '$gambar_barang', jumlah_produk = '$jumlah_barang' WHERE id_barang = '$id_barang'");
+        return mysqli_affected_rows($conn);
     }
-    function simpanProfileDosen($data){
+    // Tambah Pemesanan
+    function tambahPemesanan($data){
+        global $conn;
+        @$data_pemesanan = getData("SELECT max(id_pemesanan) FROM tbl_pemesanan")[0];
+                
+                if($data_pemesanan){
+                    $kode = substr($data_pemesanan["max(id_pemesanan)"], 3);
+                    $kode = intval($kode) + 1;
+                    
+                    $id_pemesanan = "PSN".str_pad($kode, 4, "0", STR_PAD_LEFT);
+                }else {
+                    $id_pemesanan = "PSN0001";
+                }
+        $total = $data["total"];
+        $id_user = $_SESSION["id_user"];
+        $tgl_pemesanan = date("Y-m-d");
+        $tgl_pengiriman = $data["tgl_pengiriman"];
+        $metode_bayar = $data["metode_bayar"];
+        $newKode = $data["kode_pembayaran"];
+        if($metode_bayar === "COD"){
+            $ket = "1";
+            $bukti_pembayaran = "COD";
+        }else {
+            $ket = "2";
+            $bukti_pembayaran = "-";
+        }
+        foreach($data["data_pesanan"] as $pesanan){
+            $id_keranjang = $pesanan[0]["id_keranjang"];
+            $nama = $pesanan[0]["nama"];
+            $warna = $pesanan[0]["warna"];
+            $ukuran = $pesanan[0]["ukuran"];
+            $cek = mysqli_query($conn, "INSERT INTO tbl_barang_user VALUES('', '$id_user', '$id_pemesanan', '$nama', '$warna', '$ukuran')");
+            if($cek){
+                mysqli_query($conn, "DELETE FROM tbl_keranjang WHERE id_keranjang = '$id_keranjang'");
+            }
+        }
+        $qrcode = "qrcode.png";
+        mysqli_query($conn, "INSERT INTO tbl_pemesanan VALUES('$id_pemesanan', '$id_user', '$total', '$tgl_pemesanan', '$tgl_pengiriman','$metode_bayar', '$newKode', '$bukti_pembayaran', '$ket', '$qrcode')");
+        // if($cek){
+        // }
+
+        return mysqli_affected_rows($conn);
+    }
+
+ 
+    function simpanProfile($data){
         // var_dump($data);
         // die();
         global $conn;
-        $nidn = $data["nidn"];
-        $nama_dosen = $data["nama_dosen"];
-        $hp_dosen = $data["hp_dosen"];
-        $gambarLama = $data["gambar_lama"];
+        $id_user = $_SESSION["id_user"];
+        $nama = $data["nama"];
+        $email = $data["email"];
+        $alamat = $data["alamat"];
         
-        if($_FILES["gambar"]["error"] == 4){
-            $gambar = $gambarLama;
-        }else {
-            if($gambarLama != "user.jpg"){
-                if(file_exists("img/profil/$gambarLama")){
-                    unlink("img/profil/$gambarLama");
-                }
-            }
-            $gambar = uploadGambar("img/profil/");
-        }
+        // if($_FILES["gambar"]["error"] == 4){
+        //     $galamat;
+        // }else {
+        //     if($gambarLama != "user.jpg"){
+        //         if(file_exists("img/profil/$gambarLama")){
+        //             unlink("img/profil/$gambarLama");
+        //         }
+        //     }
+        //     $gambar = uploadGambar("img/profil/");
+        // }
 
-        mysqli_query($conn, "UPDATE data_dosen SET nama_dosen = '$nama_dosen', hp = '$hp_dosen', foto = '$gambar' WHERE nidn = '$nidn'");
+        mysqli_query($conn, "UPDATE tbl_user SET nama = '$nama', email = '$email', alamat = '$alamat' WHERE id_user = '$id_user'");
         return mysqli_affected_rows($conn);
     }
 
@@ -354,6 +298,46 @@ function registerasi($data){
         unset($_SESSION["message"]);
     }
     }
+
+    // Manipulasi Tanggal;
+function manipulasiTanggal($tgl,$jumlah=1,$format='days'){
+	$currentDate = $tgl;
+	return date('Y-m-d', strtotime($jumlah.' '.$format, strtotime($currentDate)));
+}
+
+function tanggal_indo($tanggal, $cetak_hari = false)
+{
+	$hari = array ( 1 =>    'Senin',
+				'Selasa',
+				'Rabu',
+				'Kamis',
+				'Jumat',
+				'Sabtu',
+				'Minggu'
+			);
+			
+	$bulan = array (1 =>   'Januari',
+				'Februari',
+				'Maret',
+				'April',
+				'Mei',
+				'Juni',
+				'Juli',
+				'Agustus',
+				'September',
+				'Oktober',
+				'November',
+				'Desember'
+			);
+	$split 	  = explode('-', $tanggal);
+	$tgl_indo = $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
+	
+	if ($cetak_hari) {
+		$num = date('N', strtotime($tanggal));
+		return $hari[$num] . ', ' . $tgl_indo;
+	}
+	return $tgl_indo;
+}
 
 
 

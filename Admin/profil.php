@@ -1,6 +1,6 @@
 <?php 
-include '../template/admin/head.php' ?>
-<?php include '../template/admin/sidebar.php' ?>
+include '../templates/admin/head.php' ?>
+<?php include '../templates/admin/sidebar.php' ?>
 <?php
 $npm = $_SESSION["npm"];
 $data_mahasiswa = getData("SELECT * FROM data_mahasiswa WHERE npm = '$npm'");

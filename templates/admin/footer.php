@@ -1,8 +1,8 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; IT E-DUKM POLSRI <b><?= date('Y'); ?></b>
+    <strong>Copyright &copy; Junior Web Developer A | Kelompok 4 <b><?= date('Y'); ?></b>
     <div class="float-right d-none d-sm-inline-block">
-      Teknik Komputer <b><?= date('Y'); ?></b> 
+      Programmer Merah <b><?= date('Y'); ?></b> 
     </div>
   </footer>
 

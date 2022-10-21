@@ -12,10 +12,11 @@ if(isset($_POST["btn-login"])){
   if(@$data_user){
       if(password_verify($password, $data_user["password"])){
         $_SESSION["username"] = $data_user["username"];
+        $_SESSION["id_user"] = $data_user["id_user"];
         $_SESSION["level"] = $data_user["level"];
-        $_SESSION["login"]= $username;
+        $_SESSION["login"]= true;
         if($data_user["level"] == '2'){
-         echo '<script>window.location="Admin/profil.php";</script>';
+         echo '<script>window.location="index.php";</script>';
         }else{
          echo '<script>window.location="Admin/dashboard.php";</script>';
         }
@@ -32,6 +33,9 @@ if(isset($_POST["btn-login"])){
 if(isset($_SESSION["berhasil"])){
      setFlashSistem("Silahkan Login!", "success", "Berhasil Mendaftar");
      unset($_SESSION["berhasil"]);
+}else if(isset($_SESSION["belum_login"])){
+  setFlashSistem("Terlebih Dahulu!", "danger", "Silahkan Login");
+     unset($_SESSION["belum_login"]);
 }
 ?>
 <div class="login-box">
