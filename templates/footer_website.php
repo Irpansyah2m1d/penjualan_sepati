@@ -231,19 +231,19 @@
   $(".voucher").on("click", async function (e) {
   e.preventDefault();
    const { value: voucher } = await Swal.fire({
-      title: "Voucher Kemerdekaan",
+      title: "Voucher Spesial Event",
       input: "text",
       inputLabel: "Voucher",
       confirmButtonText: "Pakai",
       inputPlaceholder: "Silahkan masukan kode voucher",
     });
-    if(localStorage.getItem("voucher") && voucher === "irpanganteng" ){
+    if(localStorage.getItem("voucher") && voucher === "semogakompeten" ){
       Swal.fire("Voucher Sudah Dipakai!");
     }else {
-      if(voucher === "irpanganteng"){
+      if(voucher === "semogakompeten"){
         Swal.fire({
           icon: 'success',
-          title: 'Selamt Anda',
+          title: 'Selamat Anda',
           text: 'Berhasil Mendapatkan diskon 15%'
         })
           total = total - ((total * 15)/100);

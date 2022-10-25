@@ -24,6 +24,7 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                     <th>Produk</th>
                     <th>Tanggal Pemesanan</th>
                     <th>Tanggal Pengiriman</th>
+                    
                     <th>Total Harga</th>
                     <th>Metode Pembayaran</th>
                     <th>Keterangan</th>
@@ -67,9 +68,14 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                         </td>
                         <td>
                           <?php if($pemesanan["ket"] === "1") : ?>
-                            <span class="badge bg-danger">Belum Lunas</span>
+                            <?php if($pemesanan["metode_bayar"] === "COD") : ?>
+                              <span class="badge bg-danger">Belum Lunas</span>
+                              <?php else: ?>
+                                <span class="badge bg-danger">Menunggu Pembayaran</span>
+                            <?php endif; ?>
+                              
                             <?php elseif($pemesanan["ket"] === "2") : ?>
-                              <span class="badge bg-warning">Menunggu Pembayaran</span>
+                              <span class="badge bg-warning">Menunggu Konfirmasi</span>
                               <?php else: ?>
                                 <span class="badge bg-success">Lunas</span>
                           <?php endif; ?>

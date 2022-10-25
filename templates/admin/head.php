@@ -3,28 +3,28 @@ if(!session_id())session_start();
 include '../koneksi.php';
 $url = $_SERVER['REQUEST_URI'];
 
-$url = explode("Junior_Web_Developer/Penjualan_sepatu/",$url)[1];
+$url = explode("/Junior_Web_Developer/Penjualan_sepatu/",$url)[1];
 
 $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
 $request_uri = $uri_parts[0];
 switch ($request_uri) {
   
-  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_barang.php':
+  case '/Junior_Web_Developer/Penjualan_sepatu/Admin/data_barang.php':
     $title="Data Barang | E-Shoes";
     $bread = "Data Barang";
     $link = "data_barang.php";
     break;
-  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_pemesanan.php':
+  case '/Junior_Web_Developer/Penjualan_sepatu/Admin/data_pemesanan.php':
     $title="Data Pemesanan | E-Shoes";
     $bread = "Data Pemesanan";
     $link = "data_pemesanan.php";
     break;
-  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/data_user.php':
+  case '/Junior_Web_Developer/Penjualan_sepatu/Admin/data_user.php':
     $title="Data User | E-Shoes";
      $bread = "Data User";
     $link = "data_user.php";
     break;
-  case 'Junior_Web_Developer/Penjualan_sepatu/Admin/change_password.php':
+  case '/Junior_Web_Developer/Penjualan_sepatu/Admin/change_password.php':
     $title="Change Password | E-Shoes";
      $bread = "Change Password";
     $link = "change_password.php";

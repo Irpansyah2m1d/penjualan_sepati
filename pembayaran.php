@@ -23,7 +23,7 @@ if(isset($_POST["btn_bukti"])){
   // die();
   $gambar = uploadGambar("img/bukti_pembayaran/");
   $id_pemesanan = $_POST["id_pemesanan"];
-  $cek = mysqli_query($conn, "UPDATE tbl_pemesanan SET bukti_pembayaran = '$gambar', ket = '3' WHERE id_pemesanan = '$id_pemesanan'");
+  $cek = mysqli_query($conn, "UPDATE tbl_pemesanan SET bukti_pembayaran = '$gambar', ket = '2' WHERE id_pemesanan = '$id_pemesanan'");
   if($cek){
      setFlash("Diupload", "True", "Bukti_Pembayaran");
      echo '<script>window.location="data_pemesanan_user.php";</script>';

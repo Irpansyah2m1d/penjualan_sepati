@@ -29,7 +29,7 @@ require "templates/head_website.php";
               </div>
               <div class="title-wrap mt-5">
                      <h2>Promo Berakhir Dalam <span class="fw-bold badge bg-danger" id="waktu"></span></h2>
-                     <span>Gunakan Kode Voucher : <span class="fw-bold">irpanganteng</span></span>
+                     <span>Gunakan Kode Voucher : <span class="fw-bold">semogakompeten</span></span>
                  </div>
             </div>
 </section>

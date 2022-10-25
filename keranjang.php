@@ -71,8 +71,9 @@ if(isset($_POST["checkout"])){
                 </div>
                 <div class="col-lg-12">
 
-                  <button class="btn btn-success float-end me-3 mb-3" type="submit" name="checkout" >Checkout</button>
+                  <button class="btn btn-success float-end me-3 mb-3" type="submit" name="checkout" <?= count($data_keranjang) < 1 ? "disabled" : ""; ?> >Checkout</button>
                   <a href="" class="btn btn-warning voucher float-end me-3 mb-3" >Voucher</a>
+
                 </div>
               </div>
               </form>

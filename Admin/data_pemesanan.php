@@ -4,7 +4,7 @@ include '../templates/admin/head.php' ?>
 <?php include '../templates/admin/sidebar.php' ?>
 <?php 
 // include '../koneksi.php';
-$data_pemesanan = getData("SELECT * FROM tbl_pemesanan JOIN tbl_user ON tbl_pemesanan.id_user = tbl_user.id_user");
+$data_pemesanan = getData("SELECT * FROM tbl_pemesanan JOIN tbl_user ON tbl_pemesanan.id_user = tbl_user.id_user ORDER BY id_pemesanan DESC");
 @$id_pemesanan = $data_pemesanan[0]["id_pemesanan"];
 $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_pemesanan'");
 
@@ -37,6 +37,7 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                     <th>Total Harga</th>
                     <th>Metode Pembayaran</th>
                     <th>Keterangan</th>
+                    <th>Bukti Bayar</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -77,12 +78,23 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                         </td>
                         <td>
                           <?php if($pemesanan["ket"] === "1") : ?>
-                            <span class="badge bg-danger">Belum Lunas</span>
+                            <?php if($pemesanan["metode_bayar"] === "COD") : ?>
+                                                      <span class="badge bg-danger">Belum Bayar</span>
+                                                      <?php else: ?>
+                                                        <span class="badge bg-danger">Menunggu Pembayaran</span>
+                                                      <?php endif; ?>
                             <?php elseif($pemesanan["ket"] === "2") : ?>
-                              <span class="badge bg-warning">Menunggu Pembayaran</span>
+                              <span class="badge bg-warning">Menunggu Konfirmasi</span>
                               <?php else: ?>
                                 <span class="badge bg-success">Lunas</span>
                           <?php endif; ?>
+                        </td>
+                        <td>
+                        <?php if($pemesanan["ket"] !== "1") : ?>
+                          <a style="text-decoration:none;" href="../img/bukti_pembayaran/<?= $pemesanan["bukti_pembayaran"]; ?>" class="badge bg-orange">Bukti</a>
+                        <?php else: ?>
+                          -
+                        <?php endif; ?>
                         </td>
                         <td>
                           <a style="text-decoration:none;" href="#" data-bs-toggle="modal" data-bs-target="#id_pesanan<?= $pemesanan["id_pemesanan"]; ?>" class="badge bg-info">Detail</a>
@@ -125,9 +137,13 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                                                                   <img src="../img/loho-dana.png" alt="" width="50px" >
                                                           <?php endif; ?></p>
                                                     <p><b class="fw-bold">Keterangan :</b>  <?php if($pemesanan["ket"] === "1") : ?>
-                                                      <span class="badge bg-danger">Belum Lunas</span>
+                                                      <?php if($pemesanan["metode_bayar"] === "COD") : ?>
+                                                      <span class="badge bg-danger">Belum Bayar</span>
+                                                      <?php else: ?>
+                                                        <span class="badge bg-danger">Menunggu Pembayaran</span>
+                                                      <?php endif; ?>
                                                       <?php elseif($pemesanan["ket"] === "2") : ?>
-                                                        <span class="badge bg-warning">Menunggu Pembayaran</span>
+                                                        <span class="badge bg-warning">Menunggu Konfirmasi</span>
                                                         <?php else: ?>
                                                           <span class="badge bg-success">Lunas</span>
                                                     <?php endif; ?></p>
@@ -147,14 +163,19 @@ $data_produk = getData("SELECT * FROM tbl_barang_user WHERE id_pemesanan = '$id_
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <?php if($pemesanan["metode_bayar"] !== "COD") : ?>
-                                        <a href="pembayaran.php?id_pemesanan=<?= $pemesanan["id_pemesanan"]; ?>" class="btn btn-primary">Bayar?</a>
+                                        <?php if($_SESSION["level"] === "2") : ?>
+                                          <?php if($pemesanan["metode_bayar"] !== "COD") : ?>
+                                          <a href="pembayaran.php?id_pemesanan=<?= $pemesanan["id_pemesanan"]; ?>" class="btn btn-primary">Bayar?</a>
+                                          <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
                                     </div>
                                 </div>
                                 </div>
-                          <a style="text-decoration:none;" href="../proses_hapus.php?aksi=batalPesanan&id_pemesanan=<?= $pemesanan["id_pemesanan"]; ?>" class="badge bg-danger hapusMahasiswa" data-konfirmasi="<?= $pemesanan["id_pemesanan"]; ?>">Batal</a>
+                          <a style="text-decoration:none;" href="../proses_hapus.php?aksi=batalPesananAdmin&id_pemesanan=<?= $pemesanan["id_pemesanan"]; ?>" class="badge bg-danger hapusMahasiswa" data-konfirmasi="<?= $pemesanan["id_pemesanan"]; ?>">Batal</a>
+                          <?php if($pemesanan["ket"] === "2") : ?>
+                            <a style="text-decoration:none;" href="../proses.php?aksi=konfirmasiPesanan&id_pemesanan=<?= $pemesanan["id_pemesanan"]; ?>" class="badge bg-success" onclick="return confirm('Apakah anda yakin ingin mengkonfirmasi pemesanan?')">Konfirmasi</a>
+                          <?php endif; ?>
                         </td>
                       </tr>
                     <?php endforeach; ?>

@@ -207,7 +207,7 @@ function registerasi($data){
             $ket = "1";
             $bukti_pembayaran = "COD";
         }else {
-            $ket = "2";
+            $ket = "1";
             $bukti_pembayaran = "-";
         }
         foreach($data["data_pesanan"] as $pesanan){

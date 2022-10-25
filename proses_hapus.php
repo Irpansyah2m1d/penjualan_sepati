@@ -30,6 +30,19 @@ if(isset($_GET["aksi"])){
             setFlash("Dibatalkan", "False", "Pemesanan");
         }
     }
+    else if($_GET["aksi"] === "batalPesananAdmin"){
+        $id_pemesanan = $_GET["id_pemesanan"];
+      
+        //  $cek = mysqli_query($conn, "DELETE FROM data_mahasiswa WHERE npm = '$npm'");
+        $cek = mysqli_query($conn, "DELETE FROM tbl_pemesanan WHERE id_pemesanan = '$id_pemesanan'");
+        if($cek){
+            mysqli_query($conn, "DELETE FROM tbl_barang_user WHERE id_pemesanan = '$id_pemesanan'");
+            setFlash("Dibatalkan", "True", "Pemesanan");
+            echo '<script>window.location="Admin/data_pemesanan.php";</script>';
+        }else{
+            setFlash("Dibatalkan", "False", "Pemesanan");
+        }
+    }
 }
 
 ?>
